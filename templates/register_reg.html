@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: url("/static/bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;   /* push content down */
+            min-height: 100vh;
+        }
+
+
+
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;               /* make header span the full width */
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;             /* keep it above other elements */
+        }
+
+        .header img {
+            height: 50px;
+            margin-right: 10px;        /* little space between logo & title */
+        }
+
+        .header h1 {
+            font-size: 22px;
+            color: #333;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.92);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(6px);
+
+            margin-top: 100px;   /* 👈 push everything below header */
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        input[type="file"] {
+            padding: 6px;
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .uploaded-photo {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .uploaded-photo img {
+            max-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .home-link {
+            position: absolute;
+            top: 20px;
+            right: 50px;
+            background: #34495e;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .home-link:hover {
+            background: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+        <!-- Header with logo -->
+    <div class="header">
+        <img src="../static/uploads/UNN_LOGO.jpg" alt="Logo">  <!-- Replace with your logo path -->
+        <h1>Attendance Registration</h1>
+        <a href="/webapp.html" class="home-link">Home</a> <!-- moved inside header -->
+    </div>
+
+    <div class="container">
+        <h2>Student Registration</h2>
+
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" required>
+
+            <label for="reg_no">Registration Number:</label>
+            <input type="text" name="reg_no" required>
+
+            <label for="courses">Courses (comma-separated):</label>
+            <textarea name="courses" required></textarea>
+
+            <label for="photo">Upload Photo:</label>
+            <input type="file" name="photo" accept="image/*" required>
+
+            <input type="submit" value="Register">
+        </form>
+
+        {% if image_url %}
+            <div class="uploaded-photo">
+                <h4>Uploaded Photo:</h4>
+                <img src="{{ image_url }}" alt="Student Photo">
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
