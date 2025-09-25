@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Camera</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0; /* remove top padding since header will handle spacing */
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      right: 50px;
+    }
+
+    .logo img {
+      height: 50px;
+      
+    }
+
+    .logo h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    .home-link {
+      text-decoration: none;
+      color: white;
+      background: #3498db;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .home-link:hover {
+      background: #2980b9;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 30px; /* push below header */
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      padding: 20px;
+      flex: 1 1 480px;
+      min-width: 320px;
+    }
+
+    #camera {
+      width: 100%;
+      border-radius: 12px;
+      border: 3px solid #3498db;
+    }
+
+    .form-group {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-group input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .form-group button {
+      background: #3498db;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .form-group button:hover {
+      background: #2980b9;
+    }
+
+    #info h2 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 22px;
+    }
+
+    #info p {
+      font-size: 16px;
+      margin: 8px 0;
+      color: #555;
+    }
+
+    #info strong {
+      color: #2c3e50;
+    }
+    #status {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Responsive */
+    @media(max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="../static/uploads/UNN_LOGO.jpg" alt="Logo">
+      <h1>Facial Recognition Attendance</h1>
+    </div>
+    <a href="/webapp.html" class="home-link">Home</a>
+  </header>
+
+  <div class="container">
+    <!-- Camera Section -->
+    <div class="card">
+      <img id="camera" src="{{ url_for('video_feed') }}">
+      <div class="form-group">
+        <input type="text" id="courseInput" placeholder="Enter course to check">
+        <button onclick="setCourse()">Check</button>
+      </div>
+    </div>
+
+    <!-- Student Info Section -->
+    <div class="card" id="info">
+      <h2>Student Info</h2>
+      <p><strong>Name:</strong> <span id="name">-</span></p>
+      <p><strong>Reg No:</strong> <span id="reg_no">-</span></p>
+      <p><strong>Courses:</strong> <span id="courses">-</span></p> 
+      <div class="card" id="statusCard">
+      <h2>Registration Status</h2>
+      <p><strong>Status:</strong> <span id="status">-</span></p>
+    </div> 
+    </div>
+
+    
+  </div>
+
+  <script>
+    function fetchStudentInfo() {
+      fetch('/student_info')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('name').innerText = data.name || '-';
+          document.getElementById('reg_no').innerText = data.reg_no || '-';
+          document.getElementById('courses').innerText = data.courses?.join(", ") || '-';
+          document.getElementById('status').innerText = data.status || '-';
+        });
+    }
+
+    function setCourse() {
+      const course = document.getElementById('courseInput').value;
+      fetch('/set_course', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course: course })
+      })
+      .then(response => response.json())
+      .then(data => alert(data.message));
+    }
+
+    setInterval(fetchStudentInfo, 1000);
+  </script>
+
+
+</body>
+</html>
